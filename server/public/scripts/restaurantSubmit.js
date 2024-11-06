@@ -1,51 +1,47 @@
 const handleSubmit = async (event) => {
     // Prevent form from submitting default
-    event.preventDefault(); 
+    event.preventDefault();
 
-    // Extract fields from the form, and
-    
-    const formData = {
-        name: document.getElementById('restaurant-name').value,
-        number: document.getElementById('phone-number').value,
-        address: document.getElementById('address').value,
-        photo: document.getElementById('photoURL').value,
+    // Collect data from form
+    const formData = new FormData(event.target);
+    const newRestaurantData = {
+        name: formData.get("restaurant-name"),
+        phone: formData.get("phone-number"),
+        address: formData.get("address"),
+        photo: formData.get("photoURL"),
     };
-
-    // send a request to create a new restaurant
-
-
+    console.log("Submitting new restaurant data:", newRestaurantData);
     try {
-        // Send a POST request to create a new restaurant
-        const response = await fetch('/createRestaurant', {
-            method: 'POST',
+        // await fetch request to the server
+        // send POST request to /create endpoint on server
+        const response = await fetch('/create', {
+            method: 'POST', // POST request used to send data to server
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json', // so server knows to take request body as JSON
             },
-            body: JSON.stringify(formData), // Convert form data to JSON string
+            body: JSON.stringify(newRestaurantData), // convert newRestaurantData to JSON string to include into request body
         });
 
-        // Check if the request was successful
         if (response.ok) {
-            console.log('Restaurant created successfully!');
-            // Redirect to the restaurants page to view the new entry
+            // redirect user to restaurants page after success
             window.location.href = '/restaurants';
         } else {
-            console.error('Failed to create restaurant:', response.statusText);
+            console.error("Error submitting form:", response.statusText);
         }
     } catch (error) {
-        console.error('Error:', error);
+        console.error("Error submitting form:", error);
     }
-}
-    
+};
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Select the form by its ID
-    const form = document.getElementById('new-restaurant');
+// listening to submit button being clicked
+document.addEventListener("DOMContentLoaded", () => {
+    // select form restaurant-form
+    const form = document.getElementById('restaurant-form');
 
-    // Add event listener to the form for submit events
-    if (form) {
+    if(form) {
+        console.log("Form found, adding submit event listener.")
         form.addEventListener('submit', handleSubmit);
     } else {
-        console.error('Form not found');
+        console.error("Form not found");
     }
 });

@@ -44,7 +44,7 @@ let restaurantData = [
     },
 ];
 
-let lastId = restaurantData.length;
+let lastId = restaurantData.length> 0 ? restaurantData[restaurantData.length - 1].id : 0;
 
 const getNextId = () => {
     lastId += 1;
@@ -66,7 +66,7 @@ const getRestaurant = (id) => {
 const createRestaurant = (newRestaurant) => {
     const restaurant = {
         id: getNextId(),
-        ...newRestaurant
+        ...newRestaurant,
     };
     restaurantData.push(restaurant);
     return restaurant;
